@@ -20,7 +20,7 @@ export const Draggable = ({ id }: DraggableProps) => {
       onDragEnd={handleDragEnd}
     >
       <h3 contentEditable className="text-xl font-bold">
-        Grab this and move (You can edit this)
+        Grab this, move, drop (and edit) as you wish
       </h3>
       <h5>id : {id}</h5>
     </div>

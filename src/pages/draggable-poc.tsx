@@ -5,12 +5,24 @@ import { DropZone } from '@/components/DropZone';
 import Head from 'next/head';
 import { useState } from 'react';
 
+export type DraggableItemType = {
+  id: string;
+  dz_id: string;
+};
+
 export default function DnD() {
   const [dropZones, setDropZones] = useState([{ id: 'dz_1' }, { id: 'dz_2' }, { id: 'dz_3' }]);
-  const [draggables, setDraggables] = useState([{ id: 'd_1', dz_id: 'dz_1' }]);
+  const [draggables, setDraggables] = useState<DraggableItemType>([{ id: 'd_1', dz_id: 'dz_1' }]);
 
   const addDraggable = (dz_id: string) =>
     setDraggables([...draggables, { dz_id, id: `d_${draggables.length + 1}` }]);
+
+  const updateDraggable = (updatedItem: DraggableItemType) => {
+    const updatedDraggables = [...draggables].map((item) =>
+      item.id === updatedItem.id ? updatedItem : item,
+    );
+    setDraggables(updatedDraggables);
+  };
 
   return (
     <>
@@ -30,6 +42,7 @@ export default function DnD() {
               className="h-screen w-[300px]"
               addDraggable={() => addDraggable(id)}
               id={id}
+              updateDraggable={updateDraggable}
             />
           ))}
         </div>

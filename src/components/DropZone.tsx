@@ -1,4 +1,6 @@
+import { type DraggableItemType } from '@/pages/draggable-poc';
 import { cn } from '@/utils/cn';
+import { useState } from 'react';
 import { AddButton } from './AddButton';
 import { Draggable } from './Draggable';
 
@@ -7,33 +9,51 @@ export type DropZoneProps = {
   className?: string;
   items: { id: string; dz_id: string }[];
   addDraggable: () => void;
+  updateDraggable: (item: DraggableItemType) => void;
 };
 
-export const DropZone = ({ addDraggable, className, id: dz_id, items }: DropZoneProps) => {
+export const DropZone = ({
+  addDraggable,
+  updateDraggable,
+  className,
+  id: dz_id,
+  items,
+}: DropZoneProps) => {
+  const [active, setActive] = useState(false);
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    setActive(false);
     e.preventDefault();
+    const droppedItemId = e.dataTransfer.getData('text/plain');
+    updateDraggable({ id: droppedItemId, dz_id });
     console.log('drop', { data: e.dataTransfer.getData('text/plain') });
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setActive(true);
     console.log('dragEnter', e);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setActive(false);
     console.log('dragLeave', e);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log('dragOver', e);
+    // console.log('dragOver', e);
   };
 
   return (
     <div
       id={dz_id}
-      className={cn('relative flex h-full flex-col items-center gap-2 bg-white/5', className)}
+      className={cn(
+        'relative flex h-full flex-col items-center gap-2 bg-white/5',
+        active && 'bg-white/10',
+        className,
+      )}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       // ------------------- DROP ZONE BECAUSE OF BELOW ---------------------
